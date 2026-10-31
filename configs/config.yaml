@@ -1,0 +1,97 @@
+# Project Configuration for Distress Language Classifier
+project:
+  name: "Responsible Classifier for Detecting Distress-Related Language in Anonymized Online Posts"
+  version: "1.0.0"
+  random_seed: 42
+
+data:
+  raw_path: "data/raw/dreaddit.csv"
+  processed_dir: "data/processed"
+  train_split: "data/processed/train.csv"
+  val_split: "data/processed/val.csv"
+  test_split: "data/processed/test.csv"
+  text_column: "text"
+  label_column: "label"
+  test_size: 0.2
+  val_size: 0.1
+  stratify: true
+
+preprocessing:
+  lowercase: true
+  remove_urls: true
+  remove_handles: true
+  remove_extra_whitespace: true
+  strip_html: true
+  min_token_length: 2
+  max_seq_len: 128
+
+features:
+  tfidf:
+    ngram_range: [1, 2]
+    max_features: 10000
+    min_df: 2
+    max_df: 0.95
+    sublinear_tf: true
+    norm: "l2"
+
+models:
+  logistic_regression:
+    penalty: "l2"
+    C: 1.0
+    solver: "lbfgs"
+    max_iter: 1000
+    class_weight: "balanced"
+    random_state: 42
+
+  linear_svm:
+    C: 1.0
+    loss: "squared_hinge"
+    max_iter: 2000
+    class_weight: "balanced"
+    random_state: 42
+
+  lstm:
+    vocab_size: 15000
+    embedding_dim: 128
+    hidden_dim: 128
+    num_layers: 2
+    dropout: 0.3
+    bidirectional: false
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 15
+    early_stopping_patience: 3
+
+  bilstm:
+    vocab_size: 15000
+    embedding_dim: 128
+    hidden_dim: 128
+    num_layers: 2
+    dropout: 0.3
+    bidirectional: true
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 15
+    early_stopping_patience: 3
+
+uncertainty:
+  calibration:
+    methods: ["platt", "isotonic", "temperature_scaling"]
+    n_bins: 10
+  abstention:
+    enabled: true
+    strategy: "max_probability"  # options: max_probability, margin, entropy
+    confidence_threshold: 0.70   # Abstain if max(P(distress), 1-P(distress)) < threshold
+    threshold_sweep: [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90]
+
+explainability:
+  shap:
+    background_samples: 100
+    num_explanations: 20
+    top_k_features: 10
+    safe_framing: true # Output non-diagnostic linguistic phrase attributions
+
+paths:
+  saved_models: "saved_models"
+  reports_figures: "reports/figures"
+  reports_metrics: "reports/metrics"
