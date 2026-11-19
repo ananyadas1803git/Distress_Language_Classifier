@@ -29,10 +29,12 @@ The project implements a rigorous comparative framework spanning traditional int
 
 1. **TF-IDF + Logistic Regression:** Interpretable linear baseline with L2 regularization and balanced class weighting.
 2. **TF-IDF + Linear SVM:** Maximum-margin baseline with calibrated decision probabilities.
-3. **LSTM (Unidirectional):** Sequential neural representation capturing long-range linguistic context and sentiment trajectory.
-4. **BiLSTM (Bidirectional):** Dual-direction sequence modeling capturing forward and backward context across posts.
-5. **SHAP-Based Explanations:** Token and phrase-level attributions (via `LinearExplainer` and model-agnostic `Explainer`) equipped with ethical, non-diagnostic disclaimers.
-6. **Probability Calibration & Confidence-Based Abstention:**
+3. **TF-IDF + Random Forest:** Non-linear tree ensemble baseline leveraging bagging over feature subsets.
+4. **TF-IDF + Multinomial Naive Bayes:** Probabilistic frequency-based generative baseline with Laplace smoothing.
+5. **LSTM (Unidirectional):** Sequential neural representation capturing long-range linguistic context and sentiment trajectory.
+6. **BiLSTM (Bidirectional):** Dual-direction sequence modeling capturing forward and backward context across posts.
+7. **SHAP-Based Explanations:** Token and phrase-level attributions (via `LinearExplainer` and model-agnostic `Explainer`) equipped with ethical, non-diagnostic disclaimers.
+8. **Probability Calibration & Confidence-Based Abstention:**
    - Expected Calibration Error (ECE) and reliability diagrams.
    - Platt scaling, Isotonic regression, and Temperature scaling.
    - Confidence-based abstention (deferral) to prevent decisions on ambiguous posts and plot Coverage vs. Selective Risk curves.
@@ -77,7 +79,7 @@ Distress Language Classifier/
 │   │   └── tfidf.py              # TF-IDF n-gram feature extraction & persistence
 │   ├── models/
 │   │   ├── __init__.py
-│   │   ├── baseline_models.py    # TF-IDF + Logistic Regression & Linear SVM
+│   │   ├── baseline_models.py    # TF-IDF + Logistic Regression, Linear SVM, Random Forest & Naive Bayes
 │   │   ├── recurrent_models.py   # PyTorch LSTM & BiLSTM architectures
 │   │   └── trainer.py            # PyTorch training loop with early stopping & evaluation
 │   ├── uncertainty/
